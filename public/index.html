@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ànalisis de les reserves</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+ 
+  
+</head>
+
+
+<body>
+  <div class="top-background"></div>
+
+  <div class="text-container">
+
+    <h1>Anàlisi de les reserves d’hotels a Portugal</h1>
+  
+    <p>Aquest es el resultat de l’anàlisi de dades que hem fet per la pràctica PAC3 de l’assignatura de M2.959 - Visualització de dades del màster de Ciències de Dades de la UOC.</p>
+
+    <p>Per fer aquesta pràctica hem partit del conjunt de dades de l’article Hotel booking demand datasets que conté un conjunt de dades sobre  les reserves fetes en dos hotels de Portugal, un a Lisboa i l'altre a   l'Algarve.</p>
+  
+    <div class="espai-buit-petit"></div>
+
+    <p>Però, de quantes reserves estem parlant?</p>
+  </div>
+
+  <!-- Comptador -->
+
+  <div id="contador" class="counter">
+    <span class="value">0</span>
+  </div>
+
+  <div class="text-container">
+    <p>i com les tenim repartides?</p>
+  </div>  
+
+  <div class="flourish-embed flourish-embed" data-src="visualisation/26563727"></div>
+  <script src="https://public.flourish.studio/resources/embed.js"></script>
+
+  <div class="espai-buit"></div>
+
+  <p>però que passa amb les anul·lacions?</p>
+
+  <!-- Comptador percentatge -->
+
+  <div id="contadorPercent" class="counter">
+    <span class="value">0%</span>
+  </div>
+
+  <div class="text-container">
+    <p>es un valor excessiu que genera sobre costos de gestió i sobretot pèrdues econòmiques</p>
+
+    <div class="espai-buit-petit"></div>
+
+    <h1>Intentem esbrinar si torbem alguna relació que ens permeti reduir aquest número?</h1>
+  
+    <div class="espai-buit"></div>
+
+    <p>primer de tot, es comporten igual les anul·lacions a Lisboa com a l’Algarve? </p>
+  </div>
+
+  <!-- Flourish 2-->  
+  <div class="flourish-embed flourish-embed" data-src="visualisation/26554959"></div>
+  <script src="https://public.flourish.studio/resources/embed.js"></script>
+
+  <p><span class="small-text">tot i que les anul·lacions son significatives als dos llocs, si que són significativament més altes a Lisboa, la gent que va a la ciutat es menys fiable</span></p>
+
+  <div class="espai-buit-petit"></div>
+
+  <p>i quina distribució tenen al llarg del temps? Hi ha alguna època de l’any amb més anul·lacions?</p>
+
+  <div class="flourish-embed" data-src="visualisation/26544809"></div>
+  <script src="https://public.flourish.studio/resources/embed.js"></script>
+  
+  <div class="espai-buit-petit"></div>
+
+  <p><span class="small-text">hi ha fluctuacions en funció del mes de l’any, però no es detecten patrons clars i a priori les proporcions entra anul·lacions a la Lisboa i a l’Algarve es manté similar.</span></p>
+
+  <div class="espai-buit-petit"></div>
+
+  <p>i si les reserves son fetes amb molta antelació, afecta a la possibilitat de que es cancel·lin?</p>
+
+  <div class="flourish-embed flourish-embed" data-src="visualisation/26559414"></div>
+  <script src="https://public.flourish.studio/resources/embed.js"></script>
+
+  <div class="espai-buit-petit"></div>
+  <p><span class="small-text">doncs aquí si que sembla que hi hagi relació, es reserves amb més antelació tenen una possibilitat de ser cancel·lades superior. Però es curiós que en els hotels de ciutat aquest percentatge augmenta a mesura que la reserva és més antiga, en canvi amb els de l’Algarve es bastant estable a partir del 6 mesos previs. Igual que abans, veiem que la gent que vol ciutat no li agraden les reserves a llarg termini.</span></p>
+
+  <div class="espai-buit-petit"></div>
+  
+  <p>i la gent que ja ha provat això de fer cancel·lacions amb anterioritat, ho repeteix sovint?</p>
+
+  <div class="flourish-embed flourish-embed" data-src="story/3479215"></div>
+  <script src="https://public.flourish.studio/resources/embed.js"></script>
+
+
+  <div class="espai-buit-petit"></div>
+  <p><span class="small-text">en els dos casos hi ha força probabilitat que la gent anul·li només una vegada i els que ho han fet més de 12 vegades és molt probable que ho tornin a fer. Per altre banda, pels que han anul·lat entre 2 i 10 vegades la probabilitat d’anul·lació a la ciutat és més baixa que a l’Algarve
+  </span></p>
+
+  <div class="espai-buit-petit"></div>
+
+  <div class="text-container">
+  <p>són més fiables les reserves entre setmana? o són més segures les de cap de setmana? o les que inclouen cap de setmana i dies laborables?</p></div>
+
+  
+  <div class="flourish-embed flourish-embed" data-src="visualisation/26561006"></div>
+  <script src="https://public.flourish.studio/resources/embed.js"></script>
+
+  <div class="espai-buit-petit"></div>
+  <p><span class="small-text">en aquets cas no hi ha un patró clar, haurem de continuar buscant relacions per poder millorar les reserves</span></p>
+
+  <div class="espai-buit"></div>
+
+  <p>diuen que viatjar es compartir, hi haurà alguna relació amb les anul·lacions en funció de qui ens acompanyi?</p>
+
+  <div class="espai-buit-petit"></div>
+  <p>anem pels que viatgen sols, molts serà per vaitges de negocis</p>
+
+  <div class="flourish-embed flourish-embed" data-src="visualisation/26562374"></div>
+  <script src="https://public.flourish.studio/resources/embed.js"></script>
+
+  <p><span class="small-text">si van a Lisboa tenen una probabilitat alta d’anular, a vegades el negocis son volàtils. En canvi els que van sols a l’Algarve, no s’ho pensen gaires vegades.</span></p>
+  <div class="espai-buit-petit"></div>
+
+
+  <p>els que viatgen en parella o amigues/cs però sense mainada</p>
+
+  <div class="flourish-embed flourish-embed" data-src="visualisation/26562229"></div>
+  <script src="https://public.flourish.studio/resources/embed.js"></script>
+  
+  <p><span class="small-text">Els viatges a la Lisboa perillen, la probabilitat d’anul·lació s’apropa al 50%. L’Algarve tampoc surt gaire ben parat. Posar d’acord a amigues/cs i/o a la parella a vegades costa i s’han d’adaptar els plans en funció de com van les coses.</span></p>
+  <div class="espai-buit-petit"></div>
+ 
+  <p>ara el torn dels que viatgen amb nens</p>
+
+  <div class="flourish-embed flourish-embed" data-src="visualisation/26562417"></div>
+  <script src="https://public.flourish.studio/resources/embed.js"></script>
+
+  <p><span class="small-text">Les probabilitats d’anul·lació son moderades a les dues destinacions, els virus dels nens afecten tant als que volen anar a la ciutat com a la platja</span></p>
+  <div class="espai-buit-petit"></div>
+ 
+  <p>per últim, els que van amb nadons, serà un viatge inoblidable</p>
+
+  <div class="flourish-embed flourish-embed" data-src="visualisation/26562505"></div>
+  <script src="https://public.flourish.studio/resources/embed.js"></script>
+
+  <p><span class="small-text">doncs mira, el grup amb una probabilitat d’anul·lació més baixa. Viatjar amb nadons requereix d’un preparació “especial”, per tant, a no sé que el virus de l’escola bressol faci la guitza a última hora, anem de viatge!</span></p>
+  <div class="espai-buit-petit"></div>
+ 
+  <div class="espai-buit"></div>
+
+  <p>i els que els agrada personalitzar el seu viatge i contracten tot d’extres per millorar l’experiència?</p>
+
+  <div class="flourish-embed flourish-embed" data-src="visualisation/26562607"></div>
+  <script src="https://public.flourish.studio/resources/embed.js"></script>
+
+  <div class="espai-buit-petit"></div>
+   <p><span class="small-text">aquest cas és evident, quants més extres contracten, més fàcil es que acabem complint amb el compromís de la reserva.</span></p>
+  <div class="espai-buit-petit"></div>
+
+  <div class="espai-buit"></div>
+
+  <div class="text-container">
+    <h1>que hem aprés?</h1>
+    <div class="espai-buit"></div>
+    <p>Que no hi ha diferencies significatives entre Lisboa i l’Algarve.</p>
+    <p>Que quants més extres contractin el client més fàcil serà que vingui, parlarem amb el departament de màrqueting a veure que se li acut per enganxar més extres.</p>
+    <p>Que les que viatgen amb nadons també són segurs, tindran altres necessitats especials, però no solen fallar.</p>
+    <p>Volem reserves a llarg termini per poder planificar millor, però amb el risc de tenir cancel·lacions a última hora. Aquí haurem de jugar amb pagaments per avançat i flexibilitat per fer canvis, hem de trobar l’equilibri entre planificació i risc.</p>
+  </div>
+
+  <div class="espai-buit"></div>
+  
+  <p style="font-size: 0.6em;">Pràctica realitzada per Jordi Miguel i Costal, alumne de l’assignatura M2.959 - Visualització de dades del màster de Ciències de Dades de la UOC, del semestre setembre-febre 2025.
+
+  Entregada el 3 de desembre de 2025</span></p>
+
+  <div class="espai-buit-petit"></div>
+  
+  <script src="js/app.js" defer></script>
+</body>
+</html>
