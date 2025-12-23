@@ -1,0 +1,15 @@
+source,target,value
+City Hotel,Cap de setmana,4541
+City Hotel,Entre setmana,36881
+City Hotel,Mixta,36663
+Resort Hotel,Cap de setmana,2264
+Resort Hotel,Entre setmana,13608
+Resort Hotel,Mixta,23434
+NA,Sense nits,4
+Cap de setmana,Cancel·lada,1860
+Cap de setmana,Confirmada,4945
+Entre setmana,Cancel·lada,19358
+Entre setmana,Confirmada,31131
+Mixta,Cancel·lada,22787
+Mixta,Confirmada,37310
+Sense nits,NA,4

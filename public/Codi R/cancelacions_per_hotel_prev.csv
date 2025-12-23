@@ -1,0 +1,23 @@
+hotel,previous_cancellations,cancel_rate,n_reserves
+City Hotel,0,0.38445790912713135,72783
+City Hotel,1,0.9655846695346109,5114
+City Hotel,2,0.20754716981132076,53
+City Hotel,3,0.13636363636363635,44
+City Hotel,4,0.1,10
+City Hotel,5,0.09090909090909091,11
+City Hotel,6,0.3181818181818182,22
+City Hotel,11,0.2857142857142857,35
+City Hotel,13,0.9166666666666666,12
+City Hotel,21,1,1
+Resort Hotel,0,0.26469895596200643,38217
+Resort Hotel,1,0.8393258426966292,890
+Resort Hotel,2,0.5681818181818182,44
+Resort Hotel,3,0.9285714285714286,14
+Resort Hotel,4,0.5,6
+Resort Hotel,5,0.3333333333333333,3
+Resort Hotel,14,1,14
+Resort Hotel,19,1,19
+Resort Hotel,24,1,48
+Resort Hotel,25,1,25
+Resort Hotel,26,1,26
+NA,NA,NA,4

@@ -1,0 +1,214 @@
+---
+title: "Neteja de les dades de la PAC3"
+author: "Jordi Miguel"
+date: "30/11/2025"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: true
+    toc_depth: 3
+    number_sections: true
+  html_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load packages
+
+```{r packages}
+library("ggmosaic")
+library("ggplot2")
+library("fitdistrplus")
+library("MASS")
+library("survival")
+library("ggstatsplot")
+library("tidyverse")
+```
+
+## Lectura del dataset
+
+
+```{r load data}
+x=read.csv("hotel_bookings.csv", stringsAsFactors = T)
+dim(x)
+```
+Llegir el conjunt de dades en format CSV, amb 119.390 files i 32 columnes:
+
+```{r summary, echo=FALSE}
+summary(x)
+```
+
+# Variables numèriques
+
+Es poden observar alguns valors inesperats (valors atípics) per a diverses variables.
+Per exemple:
+
+1) Un màxim de 55 en 'adults'
+2) Un màxim de 10 en 'nens' (inclosos també els valors que falten)
+3) Un màxim de 10 en 'nadons'
+4) Valors negatius en la taxa diària mitjana ('adr') o molt alts
+
+Eliminem:
+•	Les reserves que tenen més de 10 adults
+•	Les reserves que tenen més de 5 menors i/o 5 nadons
+•	Les reserves amb un cost de la reserva superior a 1000€
+
+A part d’eliminar aquests outliers també hem harmonitzat les columnes de nadons i d’infants que no tenen valor por posar-hi un 0.
+
+També hem eliminat les entrades que tenen una tarifa negativa, les que no tinguin cap nit com a reserva i que el número d’hostes sigui 0. 
+
+```{r}
+x=x[x$adults<10,]
+x=x[x$children<5,]
+x=x[x$babies<5,]
+x=x[x$adr>=0 & x$adr<1000,]
+x[is.na(x$children),'children']=0
+x=x[x$adr>0 & 
+    (x$stays_in_week_nights+x$stays_in_weekend_nights)>0 & 
+    (x$adults+x$children+x$babies)>0 & 
+    !is.na(x$children),]
+dim(x)
+```
+Amb tot això ens queda un dataframe de 117.395, només hem perdut un 1,6%, un valor molt Baix que no afecta a la quantitat de dades.
+
+# Quantes cancel·lacions tenim
+
+```{r}
+table(x$is_canceled)
+
+
+taula <- table(x$is_canceled)
+
+
+# Percentatges
+percentatges <- prop.table(taula) * 100
+
+# Mostrar resultats
+percentatges
+
+
+```
+
+
+# Temps de reserva
+
+Analitzem si el temps d’anticipació de la reserva té algun efecte en la possibilitat d’anul·lacions.
+
+```{r}
+# Tractament: calcular taxa de cancel·lació per intervals de lead_time
+dades_proc <- x %>%
+  mutate(lead_group = cut(lead_time,
+                          breaks = c(seq(0, 360, by = 30), Inf),
+                          labels = c("1 mes", "2 mesos", "3 mesos",
+                                     "4 mesos", "5 mesos", "6 mesos",
+                                     "7 mesos", "8 mesos", "9 mesos",
+                                     "10 mesos", "11 mesos", "12 mesos",
+                                     ">1 any"),
+                          right = FALSE)) %>%
+  group_by(hotel, lead_group) %>%
+  summarise(cancel_rate = mean(is_canceled),
+            n_reserves = n())
+
+# Guardar dades processades per pujar-les a Flourish
+write_csv(dades_proc, "cancelacions_per_leadtime.csv")
+
+```
+# Cancel·lacions prèvies
+
+Si ja hi ha un historial de cancel·lació prèvia, hi ha més possibilitat de repetir l’anul·lació?
+
+
+```{r}
+# Agrupar per tipus d'hotel i nombre de cancel·lacions prèvies
+dades_proc <- x %>%
+  group_by(hotel, previous_cancellations) %>%
+  summarise(cancel_rate = mean(is_canceled),
+            n_reserves = n(),
+            .groups = "drop")
+
+# Guardar per pujar a Flourish
+write_csv(dades_proc, "cancelacions_per_hotel_prev.csv")
+```
+
+# Per dies de reserva
+
+Relació per hotel i anul·lacions si son entre setmana "stays_in_week_nights" o caps de setmana "stays_in_weekend_nights"
+
+```{r}
+dades <- x %>%
+  mutate(estada_tipus = case_when(
+    stays_in_week_nights > 0 & stays_in_weekend_nights == 0 ~ "Entre setmana",
+    stays_in_weekend_nights > 0 & stays_in_week_nights == 0 ~ "Cap de setmana",
+    stays_in_week_nights > 0 & stays_in_weekend_nights > 0 ~ "Mixta",
+    TRUE ~ "Sense nits"
+  ),
+  estat_reserva = ifelse(is_canceled == 1, "Cancel·lada", "Confirmada"))
+
+# Flux 1: Hotel → Estada
+flux1 <- dades %>%
+  count(hotel, estada_tipus) %>%
+  rename(source = hotel, target = estada_tipus, value = n)
+
+# Flux 2: Estada → Estat reserva
+flux2 <- dades %>%
+  count(estada_tipus, estat_reserva) %>%
+  rename(source = estada_tipus, target = estat_reserva, value = n)
+
+# Unir els dos fluxos
+sankey_data <- bind_rows(flux1, flux2)
+
+# Exportar per Flourish
+write_csv(sankey_data, "sankey_hotel_estada_cancelacions.csv")
+```
+
+# Per acompanyant
+
+Analitzar si les persones que viatgen soles prefereixen el city hotels o resort hotel i quin grup anul·la més, els que viatgen sols, els que viatgen amb nens o els que viatgen amb nadons.
+
+```{r}
+
+dades <- x %>%
+  mutate(tipus_viatger = case_when(
+    adults == 1 & children == 0 & babies == 0 ~ "Sol",
+    children > 0 ~ "Amb nens",
+    babies > 0 ~ "Amb nadons",
+    TRUE ~ "Altres"
+  ))
+
+resum <- dades %>%
+  group_by(hotel, tipus_viatger) %>%
+  summarise(
+    n_reserves = n(),
+    cancelades = sum(is_canceled),
+    taxa_cancelacio = mean(is_canceled),
+    .groups = "drop"
+  )
+write.csv(resum, "preferencia_i_cancelacions_per_viatger.csv", row.names = FALSE)
+```
+
+# Per peticions especials
+
+La gent que "total_of_special_requests" quina tassa de cancel·lació té en funció del tipus d'hotel
+
+```{r}
+# Suposant que el teu dataframe es diu 'dades'
+resum <- x %>%
+  group_by(hotel, total_of_special_requests) %>%
+  summarise(
+    n_reserves = n(),
+    cancelades = sum(is_canceled),
+    taxa_cancelacio = mean(is_canceled),
+    .groups = "drop"
+  )
+
+write.csv(resum, "cancelacions_per_extres.csv", row.names = FALSE)
+```
+
+
